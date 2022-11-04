@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "galloca.h": "c",
+        "*.tcc": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp"
+    }
+}

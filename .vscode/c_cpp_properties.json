@@ -1,0 +1,36 @@
+
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/local/cuda/**",
+                "/usr/local/cuda/include/**",
+                "/usr/local/cuda/include",
+                "/usr/include/**",
+                "/usr/local/include/**",
+                "/usr/include/gstreamer-1.0/gst/**",
+                "/usr/include/glib-2.0/**",
+                "./VideoManager/**",
+                "./**"
+            ],
+            "browse": {
+                "path": [
+                    "/usr/local/cuda/**",
+                    "/usr/local/cuda/include/**",
+                    "/usr/local/cuda/include",
+                    "/usr/include/**",
+                    "/usr/local/include/**",
+                    "/usr/include/gstreamer-1.0/gst/**",
+                    "/usr/include/glib-2.0/**",
+                    "./VideoManager/**",
+                    "./**"
+                ],
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "compilerPath": "/usr/bin/g++-9",
+            "cppStandard": "c++20"
+        }
+    ],
+    "version": 4
+}
