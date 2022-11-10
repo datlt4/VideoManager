@@ -19,16 +19,20 @@ void sig_to_exception(int s)
 
 int main(int argc, char **argv)
 {
+    AN::Application main_app;
+
     try
     {
-        AN::Application main_app;
         main_app.setup();
         main_app.loop();
     }
     catch (InterruptException &e)
     {
-        cv::destroyAllWindows();
         std::cout << "Caught signal " << e.S << std::endl;
+        main_app.shutdown();
+        if (main_app.joinable())
+            main_app.join();
+        cv::destroyAllWindows();
     }
     // cv::Mat no_signal_frame = cv::imread("../no-signal.png");
 

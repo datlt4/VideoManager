@@ -3,6 +3,11 @@
 // VideoCapture
 AN::VideoCapture::VideoCapture(std::string &address_in)
 {
+    this->auto_select_cap_source(address_in, 1280, 720, 30);
+}
+
+void AN::VideoCapture::auto_select_cap_source(std::string &address_in, int width, int height, int fps)
+{
     cap_source.address_in = address_in;
     // RTSP
     if (boost::to_lower_copy(cap_source.address_in.substr(0, 7)) == "rtsp://")
@@ -13,21 +18,20 @@ AN::VideoCapture::VideoCapture(std::string &address_in)
         cap_source.video_source = "rtspsrc location=" + cap_source.address_in + " latency=0 ! rtph264depay ! queue ! h264parse ! nvv4l2decoder ! nvvidconv ! video/x-raw,format=BGRx ! queue ! videoconvert ! queue ! video/x-raw, format=BGR ! appsink";
         cap_source.cap_type = VideoCaptureType::RTSP_STREAM;
     }
-    // // Youtube
+    // Youtube
     // else if (cap_source.address_in.find("youtube.com") != std::string::npos)
-    // {
-    // 	video_capture_backend = cv::CAP_GSTREAMER;
-    // 	// Youtube
-    // 	std::string http_youtube = exec(("youtube-dl -f \"bestvideo\" --get-url \"" + cap_source.address_in + '\"').c_str());
-    // 	if (http_youtube.substr(0, 8) != "https://")
-    // 	{
-    // 		http_youtube = exec(("youtube-dl -f \"best\" --get-url \"" + cap_source.address_in + '\"').c_str());
-    // 	}
-    // 	rtrim(http_youtube);
-    // 	video_source = "uridecodebin uri=" + http_youtube + "! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw,format=BGR ! appsink drop=1";
-    // 	video_cap = cv::VideoCapture(video_source, video_capture_backend);
-    // 	cap_type = VideoCaptureType::YOUTUBE;
-    // }
+    //{
+    //    cap_source.video_capture_backend = cv::CAP_GSTREAMER;
+    //    // Youtube
+    //    std::string http_youtube = execv(("youtube-dl -f \"bestvideo\" --get-url \"" + cap_source.address_in + '\"').c_str());
+    //    if (http_youtube.substr(0, 8) != "https://")
+    //    {
+    //        http_youtube = execv(("youtube-dl -f \"best\" --get-url \"" + cap_source.address_in + '\"').c_str());
+    //    }
+    //    rtrim(http_youtube);
+    //    cap_source.video_source = "uridecodebin uri=" + http_youtube + "! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw,format=BGR ! appsink drop=1";
+    //    cap_source.cap_type = VideoCaptureType::YOUTUBE;
+    //}
     // Camera USB
     else if (cap_source.address_in.substr(0, 4) == "v4l2")
     {
@@ -46,11 +50,22 @@ AN::VideoCapture::VideoCapture(std::string &address_in)
         cap_source.video_source = "filesrc location=\"" + cap_source.address_in + "\" ! qtdemux ! queue ! h264parse ! omxh264dec ! nvvidconv ! video/x-raw,format=BGRx ! queue ! videoconvert ! queue ! video/x-raw, format=BGR ! appsink";
         cap_source.cap_type = VideoCaptureType::LOCAL_VIDEO;
     }
-    // cap_source.custom_frame_width = ;
-    cap_source.frame_height = 720;
-    cap_source.custom_frame_height = true;
-    cap_source.frame_width = 1280;
-    cap_source.custom_frame_width = true;
+
+    if (height != -1)
+    {
+        cap_source.frame_height = height;
+        cap_source.custom_frame_height = true;
+    }
+    if (width != -1)
+    {
+        cap_source.frame_width = width;
+        cap_source.custom_frame_width = true;
+    }
+    if (fps != -1)
+    {
+        cap_source.frame_rate = fps;
+        cap_source.custom_frame_rate = true;
+    }
 }
 
 void AN::VideoCapture::create_connection()

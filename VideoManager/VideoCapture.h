@@ -79,6 +79,7 @@ namespace AN
     public:
         VideoCapture(std::string &input_souce);
         void create_connection();
+        void auto_select_cap_source(std::string &address_in, int width=-1, int height=-1, int fps=-1);
         bool is_opened();
         bool read(cv::Mat &image);
         int get_width_frame();

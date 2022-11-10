@@ -15,7 +15,7 @@
 #define __UNDERLINE__ "\033[4m"
 #define __ENDC__ "\033[0m"
 
-#define NO_SIGNALE_IMAGE_PATH "../no-signal.png"
+#define NO_SIGNALE_IMAGE_PATH "../asset/no-signal.png"
 #define RETRY_CONNECT 5
 
 namespace AN
@@ -32,7 +32,7 @@ namespace AN
         cv::Mat first_frame;
         cv::Mat no_signal_mat;
         std::chrono::_V2::system_clock::time_point time_since_last_connect;
-        
+
     public:
         VideoManager(std::vector<std::string> &input_sources, std::vector<std::string> &output_sources);
         bool is_opened();
