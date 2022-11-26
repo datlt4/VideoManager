@@ -40,6 +40,8 @@ namespace AN
         void start_video_capture(int index);
         void start_video_writer();
 
+        RtspServer rtsp_server;
+
         ~VideoManager()
         {
             std::cout << "[ " << __FUNCTION__ << " ]\n";

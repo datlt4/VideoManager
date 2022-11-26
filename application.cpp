@@ -55,8 +55,9 @@ void AN::Application::draw_info_message(cv::Mat image, std::vector<std::string> 
 
 void AN::Application::loop()
 {
-    cv::namedWindow(WINDOW_NAME, cv::WINDOW_KEEPRATIO);
-    cv::setWindowProperty(WINDOW_NAME, cv::WND_PROP_ASPECT_RATIO, cv::WINDOW_KEEPRATIO);
+    // cv::namedWindow(WINDOW_NAME, cv::WINDOW_KEEPRATIO);
+    // cv::setWindowProperty(WINDOW_NAME, cv::WND_PROP_ASPECT_RATIO, cv::WINDOW_KEEPRATIO);
+
     t_cap = std::thread([&]()
                         {
                             while (!this->shutdown_program)
@@ -83,6 +84,9 @@ void AN::Application::loop()
                             } });
     t_show = std::thread([&]()
                          {
+                            std::thread t_rtsp_server = std::thread([&]() {
+                                    video_manager->rtsp_server.start_rtsp_server();
+                                });
                             while (!this->shutdown_program)
                             {
                                 pipeline_data pdata = cap2show.receive();
@@ -101,9 +105,13 @@ void AN::Application::loop()
                                 unsigned int process_delay_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - pdata.time_cap).count();
                                 std::vector<std::string> messages = get_info_message(process_delay_time, pdata.frame_width, pdata.frame_height);
                                 draw_info_message(pdata.cap_frame, messages);
+                                video_manager->rtsp_server.push_frame(pdata.cap_frame);
+                                //cv::imshow("EMoi", pdata.cap_frame);
+                                //cv::waitKey(1);
 
-                                cv::imshow("EMoi", pdata.cap_frame);
-                                cv::waitKey(1);
-                            } });
+                            }
+                            video_manager->rtsp_server.stop_rtsp_server();
+                            if (t_rtsp_server.joinable()) t_rtsp_server.join();
+                            std::cout << "RTSP stream exits.\n"; });
     this->join();
 }

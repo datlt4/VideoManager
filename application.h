@@ -10,8 +10,11 @@
 #include <chrono>
 #include <memory>
 #include <atomic>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <gst/gst.h>
+#include <gst/rtsp-server/rtsp-server.h>
 
 #define DEFAULT_FONT cv::FONT_HERSHEY_COMPLEX_SMALL
 const cv::Scalar COLOR_GREEN(50, 255, 0);
